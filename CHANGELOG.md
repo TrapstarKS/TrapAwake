@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 — 2026-10-13
+
+- Restore Days / Hours / Minutes inputs directly in the menu bar on left-click.
+- Open a native context menu on right-click, with Unlimited, timed presets,
+  display control, Stop, Settings and Quit.
+- Enter starts a timer or extends an active timed session; Escape dismisses
+  the fields without ending the session.
+- Launch with compact menu bar controls; open the duration fields on demand.
+- Fix a signal race in the historical supervisor test fixture.
+
 ## 0.2.0 — 2026-10-13
 
 - Establish TrapAwake as an independent MIT-licensed fork of Insomnia.

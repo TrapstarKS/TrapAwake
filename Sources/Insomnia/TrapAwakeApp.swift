@@ -34,15 +34,15 @@ final class TrapAwakeAppDelegate: NSObject, NSApplicationDelegate {
         statusItem = AwakeStatusItem(controller: controller, login: login) { [weak self] in
             self?.showSettings()
         }
-        DispatchQueue.main.async { [weak self] in self?.statusItem?.showPopover() }
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        statusItem?.showPopover()
+        statusItem?.showDurationEditor()
         return false
     }
 
     func showSettings() {
+        statusItem?.closeDurationEditor()
         statusItem?.closePopover()
         settingsWindow?.show()
     }

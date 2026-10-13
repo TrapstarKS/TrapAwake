@@ -86,3 +86,39 @@ signal-logging fixture now waits with a builtin read on a private FIFO, so
 it forks nothing after publishing readiness. Production supervisor code,
 timeouts, lock ownership and published 0.2.0 application assets are unchanged.
 The supervisor-lifetime and slow-poll timeout tests passed after this correction.
+
+[CI run 38415871826](https://github.com/TrapstarKS/TrapAwake/actions/runs/38415871826)
+and [release-build run 38415863602](https://github.com/TrapstarKS/TrapAwake/actions/runs/38415863602)
+for `09f1f6c8a66711267ca200589632003d493393cf` both passed after that fixture
+correction. The published 0.2.0 assets remain unchanged.
+
+## 0.2.1 inline menu bar controls
+
+Seven new menu-bar tests passed with fake assertion drivers and temporary
+storage. They cover combined duration and extension limits, empty input,
+digit focus/backspace, preserving the assertion when adding time, Unlimited
+conversion, failed-stop gating and direct native child right/Control/Option
+click routing. Release compilation passed with warnings treated as errors.
+The 0.2.1 bundle was installed to `~/Applications`, its signature verified,
+and its process observed running inactive without a power assertion.
+
+An unrestricted parallel run scheduled all 1,270 cases and failed 48
+historical script/UI tests. Inspection found one-second fixture-local fake
+command deadlines expiring under load and animation-settle assertions
+running before layout completed. Fixtures have unique temporary roots and
+do not depend on an installed Insomnia copy. No production timeout or power
+behavior was changed in response.
+
+A two-worker repeat completed all 1,270 scheduled cases with two historical
+failures: the supervisor signal-count fixture and a legacy fold-animation
+wait. A subsequent serial run of those two cases plus all seven new menu-bar
+tests passed nine tests with zero failures. The parallel runs are not
+reported as clean full-suite passes. Hosted CI uses normal serial
+`swift test`; its result is recorded separately when available.
+
+These event tests call the native controls with synthetic NSEvents; they
+do not establish physical hit-testing, live keyboard focus or VoiceOver
+behavior. The UI automation surface cannot directly select this windowless
+status item. Physical interaction on macOS 26 and 27 and VoiceOver remain
+unverified for the new inline controls. The earlier observed assertion and
+recovery checks above belong to 0.2.0; its core lifecycle is unchanged.

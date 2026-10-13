@@ -118,8 +118,8 @@ private struct AwakeSettingsView: View {
         .onExitCommand { NSApp.keyWindow?.close() }
         .sheet(isPresented: $showChangelog) {
             VStack(alignment: .leading, spacing: 16) {
-                Text("What’s new in TrapAwake 0.2.0").font(.title2.weight(.semibold))
-                Text("A minimal native menu bar app with one-click awake control, unlimited or timed sessions, an independent screen-awake setting, and battery and thermal protections.")
+                Text("What’s new in TrapAwake 0.2.1").font(.title2.weight(.semibold))
+                Text("Set days, hours and minutes directly in the menu bar. Right-click for Unlimited, timed presets and session controls. Display, battery and thermal protections remain independent.")
                 Text("Sessions use process-owned macOS power assertions. Quit releases them, and interrupted sessions are reported at the next launch.")
                 HStack {
                     Link("Release history on GitHub", destination: URL(string: "https://github.com/TrapstarKS/TrapAwake/releases")!)
@@ -157,7 +157,7 @@ private struct AwakeSettingsView: View {
                 Text("Current session")
             }
             Section {
-                Picker("Menu bar click starts", selection: Binding(
+                Picker("Default session", selection: Binding(
                     get: { timedDefault },
                     set: { timed in
                         update { $0.defaultDuration = timed ? customDefault ?? 3_600 : nil }
@@ -181,7 +181,7 @@ private struct AwakeSettingsView: View {
             } header: {
                 Text("Awake sessions")
             } footer: {
-                Text("Click the menu bar icon once to start or stop. Right-click or Option-click for options. Closing the popup leaves the session running.")
+                Text("Click the menu bar icon to enter days, hours and minutes. Enter starts a timed session or adds time to a running timer. Right-click for Unlimited and Stop. Escape closes the fields while the session continues.")
             }
 
             Section {
@@ -276,7 +276,7 @@ private struct AwakeSettingsView: View {
                 .accessibilityHidden(true)
             VStack(spacing: 4) {
                 Text("TrapAwake").font(.title.weight(.semibold))
-                Text("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.2.0")")
+                Text("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.2.1")")
                     .foregroundStyle(.secondary)
             }
             Text("Keep your Mac awake, on your terms.")

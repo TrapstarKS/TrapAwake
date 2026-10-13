@@ -31,9 +31,14 @@ behavior. Protection transitions release assertions. Battery reads retry
 only while unreadable; no heavy process polling is present. Critical thermal
 protection is mandatory; serious thermal protection is configurable.
 
-AppKit owns the status item, popover and settings window. SwiftUI owns their
-controls. Left-click toggles a session; right/Option/Control-click opens
-options. Closing UI leaves assertions intact. Settings persist immediately
+AppKit owns the status item, native context menu, inline duration controls,
+attention popover and settings window. SwiftUI owns settings and attention
+controls. Left-click reveals days/hours/minutes; Return starts a timed
+session or extends an existing timed session. Right/Option/Control-click
+opens Unlimited, presets and Stop. The pure legacy DurationInput and
+nonactivating KeyCatcherPanel are reused without the legacy SessionManager.
+The combined duration is checked against the assertion lifecycle's 30-day
+limit. Closing UI leaves assertions intact. Settings persist immediately
 only when validation and storage succeed. LoginItem uses SMAppService and
 its original install-identity healing behavior; launching the app does not
 start a session.

@@ -3,7 +3,8 @@
 <p align="center"><strong>Your Mac stays awake until you say otherwise.</strong></p>
 
 TrapAwake is a free, native menu bar app for Apple Silicon Macs. Click its
-sun to keep the system awake indefinitely; click again to stop. Let the
+sun to enter days, hours and minutes directly in the menu bar. Right-click
+for Unlimited, timed presets and Stop. Let the
 display sleep normally, or explicitly keep it on. No account, subscription,
 ads, analytics, telemetry, administrator password, or background helper.
 
@@ -17,12 +18,14 @@ are preserved. See [NOTICE](NOTICE.md) and [the source/PR audit](docs/trapawake-
 
 ## Features
 
-- **Unlimited / Until Disabled**, the default. There is no hidden deadline.
-- **Timed sessions**: 15/30 minutes, 1/2/4/8 hours, or custom minutes up to 30 days.
+- **Unlimited / Until Disabled**, available directly in the context menu.
+  There is no hidden deadline.
+- **Timed sessions**: inline days/hours/minutes, 15/30-minute and 1/2/4/8-hour
+  presets, up to 30 days total.
 - Independent **Keep display awake** switch; system prevention stays active
   while the display follows its normal settings when the switch is off.
-- One-click start/stop, with a compact sun or optional timed countdown.
-- Native SwiftUI options and settings, light/dark appearance, accessible
+- Compact sun or optional timed countdown, with inline duration controls.
+- Native AppKit menu bar controls and SwiftUI settings, light/dark appearance, accessible
   names, keyboard controls, and reduced-motion support.
 - Battery warnings, configurable critical battery cutoff, mandatory
   critical thermal cutoff, and an optional earlier serious-heat cutoff.
@@ -30,9 +33,10 @@ are preserved. See [NOTICE](NOTICE.md) and [the source/PR audit](docs/trapawake-
   diagnostics, and explicit recovery acknowledgement.
 - Optional launch at login. Every launch starts inactive.
 
-![TrapAwake menu on a real Mac](docs/assets/trapawake-menu.png)
+![TrapAwake settings on a real Mac](docs/assets/trapawake-settings.png)
 
-![Timed session](docs/assets/trapawake-timed.png)
+Settings captured from the installed 0.2.0 release. Version 0.2.1 moves the
+primary duration controls into the menu bar and adds a native context menu.
 
 ## Install
 
@@ -69,14 +73,20 @@ Do not disable Gatekeeper or remove quarantine globally.
 ## Using it
 
 1. Open TrapAwake. Its controls appear at the menu bar sun.
-2. Click the sun to start the default Unlimited session. Click again to end it.
-3. Right-click, Control-click, or Option-click the sun for options. Select a
-   timed preset or custom duration there, or change the default in Settings.
+2. Left-click the sun to reveal **Days**, **Hours** and **Minutes**. Type a
+   duration, use **Tab** to move between fields, and press **Return** to start.
+   During a timed session, the entered duration adds time to that session.
+   An empty entry starts the configured finite default, or one hour when
+   the default is Unlimited. Entering a duration during Unlimited switches
+   it to a timed session.
+3. Right-click, Control-click, or Option-click for the native context menu.
+   Select **Unlimited**, a timed preset, or **Stop** there.
 4. Enable **Keep display awake** only when you want that additional hold.
-5. Open Settings with the button or **⌘,**. **Escape** closes the popover;
-   **Return** activates its primary action; **⌘Q** quits and releases the hold.
+5. Open Settings from the menu or with **⌘,**. **Escape** closes the fields;
+   **⌘Q** quits and releases the hold. Clicking the sun again also closes
+   the fields without ending the session.
 
-Closing the popover or Settings does not end a session. A timed countdown
+Closing the fields, context menu or Settings does not end a session. A timed countdown
 uses a continuous clock, so changing the system clock does not extend it.
 The normal idle sleep settings take effect again when its assertions end;
 TrapAwake never rewrites those settings.
@@ -179,7 +189,8 @@ that must retain its recovery evidence until its own cleanup succeeds.
 
 Based on Insomnia commit `b6a7499c183b82eb30b5e969489e6a7420250eea` (October 13,
 2026), after its stable 0.1.0. Its power observer, private file utilities,
-login item support and session formatting are reused. The legacy engine and
+login item support, duration input, keyboard capture and session formatting
+are reused. The legacy engine and
 tests remain for reference; the shipping app uses a smaller assertion-only
 lifecycle because the original engine assumes global privileged pmset changes.
 

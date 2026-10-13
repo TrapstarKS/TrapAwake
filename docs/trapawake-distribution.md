@@ -20,7 +20,7 @@ build script then uses hardened runtime and a timestamp. After building,
 submit the ZIP to Apple's notary service using a stored keychain profile:
 
 ```bash
-xcrun notarytool submit dist/TrapAwake-0.2.0-arm64.zip \
+xcrun notarytool submit dist/TrapAwake-0.2.1-arm64.zip \
   --keychain-profile YOUR_PROFILE --wait
 xcrun stapler staple dist/TrapAwake.app
 xcrun stapler validate dist/TrapAwake.app

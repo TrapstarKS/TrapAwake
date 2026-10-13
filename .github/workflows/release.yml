@@ -65,6 +65,7 @@ jobs:
           cat > notes.md <<'NOTES'
           Native rootless keep-awake for Apple Silicon, macOS 26+.
           Unlimited and timed sessions, separate display control, battery and thermal safeguards.
+          Left-click for inline days/hours/minutes; right-click for the native session menu.
           Ad-hoc signed. Not Developer ID signed or notarized. Verify SHA256SUMS before installing.
           Independent fork of krishhgg/Insomnia; MIT notices and original history preserved.
           See README and CHANGELOG in the repository for installation, limitations, and credits.

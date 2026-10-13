@@ -12,7 +12,8 @@ TrapAwake 0.2.0 starts an independent release series.
 The preserved base also contains contributions by Batuhan Aydin, nsd97 and
 Danish Rafie. Their commit authorship is retained. The reusable battery and
 thermal monitor, owner-only file utilities, session formatting, login item
-support, and legacy recovery code originate in that history.
+support, duration input, keyboard capture, and legacy recovery code
+originate in that history.
 
 The six community pull requests requested for evaluation are documented in
 [the audit](docs/trapawake-audit.md). They were inspected at specific head
