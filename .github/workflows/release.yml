@@ -66,7 +66,8 @@ jobs:
           Native rootless keep-awake for Apple Silicon, macOS 26+.
           Unlimited and timed sessions, separate display control, battery and thermal safeguards.
           Left-click for inline days/hours/minutes; right-click for the native session menu.
-          Ad-hoc signed. Not Developer ID signed or notarized. Verify SHA256SUMS before installing.
+          Install: open the DMG, drag TrapAwake to Applications, then open the app. No terminal command or checksum file is required.
+          Ad-hoc signed. Not Developer ID signed or notarized. SHA256SUMS is optional download-integrity information.
           Independent fork of krishhgg/Insomnia; MIT notices and original history preserved.
           See README and CHANGELOG in the repository for installation, limitations, and credits.
           NOTES

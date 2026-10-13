@@ -44,28 +44,18 @@ Requires **Apple Silicon and macOS 26 or later**. Validation is recorded in
 [the release checks](docs/trapawake-validation.md); macOS 27 is a CI target,
 not a claim that every hardware/OS combination was tested locally.
 
-Download a ZIP or DMG and `SHA256SUMS` from
-[Releases](https://github.com/TrapstarKS/TrapAwake/releases). Verify the files
-in the same folder:
+1. Download the **DMG** from [Releases](https://github.com/TrapstarKS/TrapAwake/releases/latest).
+2. Open it and drag **TrapAwake** to **Applications**.
+3. Open TrapAwake from Applications.
 
-```bash
-shasum -a 256 -c SHA256SUMS
-```
-
-For the ZIP, unpack it and run:
-
-```bash
-./install-trapawake.sh ./TrapAwake.app
-open "$HOME/Applications/TrapAwake.app"
-```
-
-Or drag the app from the DMG to Applications. The supplied installer uses
-`~/Applications` and checks a private copy of the app before replacing it.
+No terminal command or checksum file is needed to install or run the app.
+The ZIP is an alternative: unpack it and drag the app to Applications.
+An optional install script is also included; it uses `~/Applications`
+and checks a private copy of the app before replacing it.
 Neither installation route installs sudoers entries or launchd jobs.
 
 **The initial release is ad-hoc signed, not Developer ID signed or
-notarized.** A checksum detects changed bytes; it is not a trust or Apple
-notarization certificate. macOS may block a downloaded application. After
+notarized.** macOS may block a downloaded application. After
 reviewing its source and origin, follow
 [Apple's per-app approval instructions](https://support.apple.com/guide/mac-help/mh40616/mac).
 Do not disable Gatekeeper or remove quarantine globally.

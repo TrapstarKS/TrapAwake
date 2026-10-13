@@ -19,8 +19,9 @@ The kernel removes assertions on process exit; the app never resumes one
 on launch or reboot. Other apps' assertions and system safety policies remain
 under their owners' control.
 
-Initial artifacts are ad-hoc signed and not notarized. Verify checksums and
-origin; use Apple's per-app approval UI if appropriate. Never disable
+Initial artifacts are ad-hoc signed and not notarized. Download from this
+repository's Releases. Checksums are optional integrity information, not
+an installation requirement. Use Apple's per-app approval UI if appropriate. Never disable
 Gatekeeper globally. Developer ID signing and notarization requirements are
 in docs/trapawake-distribution.md. A signature does not establish absence of
 bugs. This fork does not inherit validation claims for hardware behavior

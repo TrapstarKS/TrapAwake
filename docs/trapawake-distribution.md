@@ -6,6 +6,11 @@ ZIP, DMG and SHA256SUMS. Assembly/package staging directories are removed on
 exit. `.build` is a developer cache; remove it after validation if desired.
 No download/build directory is needed by the installed app.
 
+Users install by opening the DMG, dragging TrapAwake to Applications and
+opening the app. SHA256SUMS is optional download-integrity information;
+neither installation nor the app requires it. Maintainer packaging and CI
+still verify artifacts automatically.
+
 The ZIP includes the license, credits, README and user-level install/remove
 scripts. The DMG includes an Applications link. Neither installs privileged
 components. The installed bundle includes LICENSE, NOTICE and CHANGELOG.
