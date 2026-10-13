@@ -116,6 +116,20 @@ tests passed nine tests with zero failures. The parallel runs are not
 reported as clean full-suite passes. Hosted CI uses normal serial
 `swift test`; its result is recorded separately when available.
 
+[CI run 38425365361](https://github.com/TrapstarKS/TrapAwake/actions/runs/38425365361)
+for the 0.2.1 source `0dc4b52ff8a36a5733d9602f1a3e63228b25e5b9` passed
+on both macOS 26 and 27. Each runner executed 1,270 tests with 27 conditional
+skips and zero failures. Release compilation with warnings as errors,
+packaging and ShellCheck passed. The extra TERM observed in the local
+parallel supervisor test has not been attributed to a sender; no timeout
+re-signal or post-readiness fork explains it in the inspected source.
+That historical signal engine is not called by the shipping app.
+
+The uploaded ZIP and DMG were downloaded again. SHA256SUMS, the extracted
+bundle signature and the DMG checksum passed; the extracted app is
+byte-identical to the installed 0.2.1 bundle. These remain locally built,
+ad-hoc signed assets, without a hosted provenance or notarization claim.
+
 These event tests call the native controls with synthetic NSEvents; they
 do not establish physical hit-testing, live keyboard focus or VoiceOver
 behavior. The UI automation surface cannot directly select this windowless
