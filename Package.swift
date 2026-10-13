@@ -2,10 +2,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "Insomnia",
+    name: "TrapAwake",
     platforms: [
         .macOS(.v26),
     ],
+    products: [.executable(name: "TrapAwake", targets: ["Insomnia"])],
     targets: [
         .executableTarget(
             name: "Insomnia",

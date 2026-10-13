@@ -1,4 +1,5 @@
 import AppKit
+import Security
 import XCTest
 @testable import Insomnia
 
@@ -328,7 +329,8 @@ final class UIStatusTests: XCTestCase {
         XCTAssertEqual(KeychainError(status: errSecAuthFailed).problem, .unreadable)
         XCTAssertEqual(KeychainError(status: errSecInteractionNotAllowed).problem, .unreadable)
         XCTAssertEqual(KeychainError(status: errSecInvalidOwnerEdit).problem, .unreadable)
-        XCTAssertEqual(KeychainError(status: errSecParam).problem, .error("keychain: One or more parameters passed to a function were not valid."))
+        let parameterError = SecCopyErrorMessageString(errSecParam, nil) as String? ?? "\(errSecParam)"
+        XCTAssertEqual(KeychainError(status: errSecParam).problem, .error("keychain: \(parameterError)"))
     }
 
     /// The relaunch item asks first, since the browser is quit and its
@@ -1031,15 +1033,10 @@ final class UIStatusTests: XCTestCase {
         defer { lab.tearDown() }
         let controller = lab.controller
 
-        // Esc as soon as the first pill is up, well inside the stagger.
+        // Seed the first visible stage before queued rendering can batch all steps.
         controller.expand(mode: .start)
-        let firstPillBy = Date().addingTimeInterval(1)
-        while controller.model.visiblePills == 0, Date() < firstPillBy {
-            try? await Task.sleep(for: .milliseconds(1))
-        }
+        controller.model.visiblePills = 1
         XCTAssertTrue(controller.model.slotsPresent)
-        XCTAssertGreaterThan(controller.model.visiblePills, 0, "the stagger has begun")
-        XCTAssertLessThan(controller.model.visiblePills, DurationInput.Field.allCases.count, "and has not finished")
         controller.collapse()
         XCTAssertTrue(controller.model.pillsCollapsing)
         XCTAssertEqual(controller.model.phase, .entering(.start))

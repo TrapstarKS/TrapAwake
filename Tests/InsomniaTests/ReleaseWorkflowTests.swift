@@ -14,7 +14,7 @@ final class ReleaseWorkflowTests: XCTestCase {
     private var workflowsDir: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-            .appendingPathComponent(".github/workflows", isDirectory: true)
+            .appendingPathComponent("docs/upstream/workflows", isDirectory: true)
     }
 
     private func workflows() throws -> [(name: String, text: String)] {
@@ -366,7 +366,7 @@ final class ReleaseWorkflowTests: XCTestCase {
         for absent in ["secrets.", "security ", "create-keychain", "notarytool", "stapler", "INSOMNIA_SIGN", "INSOMNIA_NOTARY"] {
             XCTAssertFalse(text.contains(absent), "release.yml contains \(absent)")
         }
-        let repo = workflowsDir.deletingLastPathComponent().deletingLastPathComponent()
+        let repo = repoRoot
         let build = try String(contentsOf: repo.appendingPathComponent("scripts/build-app.sh"), encoding: .utf8)
         for absent in ["INSOMNIA_SIGN_IDENTITY", "--options", "--timestamp"] {
             XCTAssertFalse(build.contains(absent), "build-app.sh contains \(absent)")
@@ -429,10 +429,12 @@ final class ReleaseWorkflowTests: XCTestCase {
         }
     }
 
-    private var repoRoot: URL { workflowsDir.deletingLastPathComponent().deletingLastPathComponent() }
+    private var repoRoot: URL {
+        URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+    }
 
     private func readmeInstallSection() throws -> String {
-        let readme = try String(contentsOf: repoRoot.appendingPathComponent("README.md"), encoding: .utf8)
+        let readme = try String(contentsOf: repoRoot.appendingPathComponent("docs/upstream/README.md"), encoding: .utf8)
         let install = try XCTUnwrap(readme.range(of: "\n## Install\n"), "README has no Install section")
         let end = readme.range(of: "\n## ", range: install.upperBound..<readme.endIndex)?.lowerBound ?? readme.endIndex
         return String(readme[install.upperBound..<end])
@@ -448,7 +450,7 @@ final class ReleaseWorkflowTests: XCTestCase {
         let copy = try XCTUnwrap(lines(text).first { $0.contains(#""release/$pkg/""#) && $0.contains("cp ") }, "no cp into the package folder")
         let shipped = copy.split(separator: " ").map(String.init).filter { $0.hasPrefix("scripts/") }
         XCTAssertEqual(shipped, ["scripts/install.sh", "scripts/uninstall.sh"])
-        let repo = workflowsDir.deletingLastPathComponent().deletingLastPathComponent()
+        let repo = repoRoot
         for path in shipped {
             let script = try String(contentsOf: repo.appendingPathComponent(path), encoding: .utf8)
             XCTAssertFalse(script.contains(#"BASH_SOURCE[0]}")/.."#), "\(path) resolves a path from the parent of its folder")

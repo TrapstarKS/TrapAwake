@@ -7948,6 +7948,8 @@ final class AppEncodedJournalScriptTests: XCTestCase {
                     let label = "\(v.label) record \(record) legacy \(legacy)"
                     let f = try ScriptFixture()
                     defer { f.destroy() }
+                    let script = try String(contentsOf: f.backstop, encoding: .utf8)
+                    try ScriptFixture.patch(script, ["COMMAND_TIMEOUT_SECONDS": "5"]).write(to: f.backstop, atomically: true, encoding: .utf8)
                     let before = try await appJournal(uid: v.uid, name: v.name, record: record, legacy: legacy, boot: f.bootUUID)
                     if v.label != "plain" {
                         XCTAssertTrue(String(decoding: before, as: UTF8.self).contains("\(backslash)\(backslash)u0041"), label)
@@ -7990,6 +7992,8 @@ final class AppEncodedJournalScriptTests: XCTestCase {
                         let label = "\(v.label) record \(record) legacy \(legacy) purge \(purge)"
                         let f = try ScriptFixture()
                         defer { f.destroy() }
+                        let script = try String(contentsOf: f.backstop, encoding: .utf8)
+                        try ScriptFixture.patch(script, ["COMMAND_TIMEOUT_SECONDS": "5"]).write(to: f.backstop, atomically: true, encoding: .utf8)
                         let before = try await appJournal(uid: v.uid, name: v.name, record: record, legacy: legacy, boot: f.bootUUID)
                         try f.installMachinery()
                         try before.write(to: f.state)

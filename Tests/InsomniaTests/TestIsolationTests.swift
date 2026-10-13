@@ -72,6 +72,11 @@ final class TestIsolationTests: XCTestCase {
             XCTAssertTrue(isInside(url, home), "\(url.path) is outside INSOMNIA_HOME \(home.path)")
             XCTAssertFalse(isInside(url, realLibrary), url.path)
         }
+        let awake = AwakePaths.fromEnvironment()
+        for url in [awake.appSupport, awake.logs, awake.preferencesFile, awake.sessionFile, awake.ownerLock, awake.logFile] {
+            XCTAssertTrue(isInside(url, home), "TrapAwake path escaped the test home: \(url.path)")
+            XCTAssertFalse(isInside(url, realLibrary), url.path)
+        }
     }
 
     func testDefaultLogLineStaysOutOfTheRealLog() throws {

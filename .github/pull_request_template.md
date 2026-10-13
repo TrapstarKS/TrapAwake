@@ -1,19 +1,16 @@
-## What changes
+## Change
 
-<!-- What the change does, and the issue it fixes. -->
+Describe the user-visible behavior and why it belongs in TrapAwake.
+Contributions target this independent fork; no upstream PR is required.
 
-## How it was tested
+## Validation
 
-<!-- The tests you added or changed, and anything you ran by hand. -->
+List meaningful tests and checks. Sensitive operations must use fake drivers
+and isolated stores. Document any observed hardware checks separately, with
+the exact source revision, platform, result and limits. Do not claim an
+unperformed hardware or signing check.
 
-## Real-Mac evidence
+## Credits
 
-<!--
-Needed unless the pull request only changes docs/, Tests/, .github/,
-.greptile/, README.md, CONTRIBUTING.md, SECURITY.md, LICENSE or .gitignore.
-After your last push, post a report for that exact commit as a comment:
-every item in "Real-Mac checks before a release" (docs/releasing.md) that
-the change can affect, with raw output. CONTRIBUTING.md, "Real-Mac
-evidence", lists what to include. A later push, by you or a maintainer,
-needs a new report.
--->
+If adapting external code, identify its author, source commit, license and
+any relevant review findings. Preserve attribution and copyright notices.

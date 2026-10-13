@@ -1,264 +1,196 @@
-<p align="center">
-  <img src="docs/assets/eye-open.svg" alt="Insomnia: an open eye with a round pupil and five lashes above it" width="112">
-</p>
+<p align="center"><img src="Resources/TrapAwake-1024.png" width="112" alt="TrapAwake sun icon"></p>
+<h1 align="center">TrapAwake</h1>
+<p align="center"><strong>Your Mac stays awake until you say otherwise.</strong></p>
 
-<h1 align="center">Insomnia</h1>
+TrapAwake is a free, native menu bar app for Apple Silicon Macs. Click its
+sun to keep the system awake indefinitely; click again to stop. Let the
+display sleep normally, or explicitly keep it on. No account, subscription,
+ads, analytics, telemetry, administrator password, or background helper.
 
-<p align="center">
-  <strong>Keep your Mac awake. Give the session an end time.</strong>
-</p>
+An independent, personally maintained fork of
+[Insomnia](https://github.com/krishhgg/Insomnia), originally developed by
+**Krish Garg (krishhgg)**. Created to replace a developer's `nosleep` terminal
+alias with a simple, indefinite keep-awake workflow and native controls.
+TrapAwake is not an official Insomnia release and is not affiliated with or
+endorsed by its maintainers. Original MIT copyright notices and Git history
+are preserved. See [NOTICE](NOTICE.md) and [the source/PR audit](docs/trapawake-audit.md).
 
-<p align="center">
-  A macOS menu bar app for timed awake sessions. Insomnia is an eye icon that
-  lives in your MacBook menu bar. It has no Dock icon and no main window. Set
-  how long your Mac stays awake, choose what happens when the lid closes, and
-  see when something could not be undone.
-</p>
+## Features
 
-<p align="center">
-  <a href="https://getinsomnia.app"><strong>Website</strong></a> ·
-  <a href="#install"><strong>Install</strong></a> ·
-  <a href="#using-it"><strong>Using it</strong></a> ·
-  <a href="#what-happens-when-the-lid-closes"><strong>Lid close</strong></a> ·
-  <a href="#how-recovery-works"><strong>Recovery</strong></a> ·
-  <a href="SECURITY.md"><strong>Security</strong></a>
-</p>
+- **Unlimited / Until Disabled**, the default. There is no hidden deadline.
+- **Timed sessions**: 15/30 minutes, 1/2/4/8 hours, or custom minutes up to 30 days.
+- Independent **Keep display awake** switch; system prevention stays active
+  while the display follows its normal settings when the switch is off.
+- One-click start/stop, with a compact sun or optional timed countdown.
+- Native SwiftUI options and settings, light/dark appearance, accessible
+  names, keyboard controls, and reduced-motion support.
+- Battery warnings, configurable critical battery cutoff, mandatory
+  critical thermal cutoff, and an optional earlier serious-heat cutoff.
+- Atomic private preferences, single-instance ownership, interrupted-session
+  diagnostics, and explicit recovery acknowledgement.
+- Optional launch at login. Every launch starts inactive.
 
-<p align="center">
-  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-536D78?style=flat-square"></a>
-  <img alt="macOS 26 or later" src="https://img.shields.io/badge/macOS-26%2B-303336?style=flat-square">
-  <img alt="Experimental source build" src="https://img.shields.io/badge/Status-experimental-536D78?style=flat-square">
-</p>
+![TrapAwake menu on a real Mac](docs/assets/trapawake-menu.png)
 
-> **Use a stable, well-ventilated surface, not a closed bag.** Insomnia is
-> experimental. Recovery can fail, and a running timer is not a safety
-> guarantee.
-> [Validation status](docs/release-validation.md) · [Apple's ventilation guidance](https://support.apple.com/en-us/102336)
-
-<p align="center">
-  <img src="docs/assets/session-flow.svg" alt="Illustrated menu-bar controls: enter Days, Hours, and Minutes, watch the countdown, and hold the end control to finish early. Click the eye or countdown to add time. Closing the lid is optional, and incomplete recovery needs attention." width="880">
-</p>
+![Timed session](docs/assets/trapawake-timed.png)
 
 ## Install
 
-Requires macOS 26 or later on an Apple Silicon Mac.
+Requires **Apple Silicon and macOS 26 or later**. Validation is recorded in
+[the release checks](docs/trapawake-validation.md); macOS 27 is a CI target,
+not a claim that every hardware/OS combination was tested locally.
 
-Paste this into your coding agent:
-
-```text
-Install the latest stable Insomnia release by following https://github.com/krishhgg/Insomnia/blob/main/skills/install-insomnia/SKILL.md. If a step needs my password, give me the command to run in Terminal.
-```
-
-For the newest nightly, write "the newest Insomnia nightly prerelease" in
-place of "the latest stable Insomnia release". Nightlies are built from `main`
-on each day it has new commits. They have the newest code and may be broken.
-
-To install a release yourself, follow [docs/install.md](docs/install.md). It
-covers both channels, how to check the download, and `v0.1.0`, which installs
-differently.
-
-### Build from source
-
-Needs Xcode with Swift 6.2 or later. Replace `v<version>` with the latest
-stable tag, or a nightly tag for the newest code:
+Download a ZIP or DMG and `SHA256SUMS` from
+[Releases](https://github.com/TrapstarKS/TrapAwake/releases). Verify the files
+in the same folder:
 
 ```bash
-git clone --branch v<version> --depth 1 https://github.com/krishhgg/Insomnia.git
-cd Insomnia
-./scripts/install.sh
-open "$HOME/Applications/Insomnia.app"
+shasum -a 256 -c SHA256SUMS
 ```
 
-<details>
-<summary><strong>What the installer changes on your Mac</strong></summary>
+For the ZIP, unpack it and run:
 
-The installer needs your password, because the sudoers rule is a system
-file. It installs:
-
-- The app, at `~/Applications/Insomnia.app`.
-- A **recovery agent**, a `launchd` job that runs every minute. If the app is
-  gone when a session should have ended, the agent tries to undo the
-  session's changes.
-- A **sudoers rule** at `/etc/sudoers.d/insomnia`. A sudoers rule decides who
-  can run what with `sudo`. This one lets your user account, not just
-  Insomnia, run these four commands without a password:
-
-```text
-/usr/bin/pmset -a disablesleep 1
-/usr/bin/pmset -a disablesleep 0
-/usr/bin/pmset -b lowpowermode 1
-/usr/bin/pmset -b lowpowermode 0
+```bash
+./install-trapawake.sh ./TrapAwake.app
+open "$HOME/Applications/TrapAwake.app"
 ```
 
-Any program running as you can use that rule too, so review it before you
-install. [docs/install.md](docs/install.md#what-gets-installed) lists every
-file and explains how upgrades replace them.
+Or drag the app from the DMG to Applications. The supplied installer uses
+`~/Applications` and checks a private copy of the app before replacing it.
+Neither installation route installs sudoers entries or launchd jobs.
 
-</details>
+**The initial release is ad-hoc signed, not Developer ID signed or
+notarized.** A checksum detects changed bytes; it is not a trust or Apple
+notarization certificate. macOS may block a downloaded application. After
+reviewing its source and origin, follow
+[Apple's per-app approval instructions](https://support.apple.com/guide/mac-help/mh40616/mac).
+Do not disable Gatekeeper or remove quarantine globally.
 
 ## Using it
 
-1. **Start.** Click the eye in the menu bar, enter days, hours and minutes,
-   and press Enter.
-2. **Add time.** Click the eye or the countdown during a session.
-3. **End early.** Press and hold the end control next to the countdown.
-4. **Settings and status.** Right-click the eye. Quit asks Insomnia to undo
-   the session first, and it refuses while a change is still waiting to be
-   undone. Saved audio for an output that isn't connected doesn't hold it up.
-   Insomnia restores that output if it reconnects while the app runs, or at
-   the next launch.
+1. Open TrapAwake. Its controls appear at the menu bar sun.
+2. Click the sun to start the default Unlimited session. Click again to end it.
+3. Right-click, Control-click, or Option-click the sun for options. Select a
+   timed preset or custom duration there, or change the default in Settings.
+4. Enable **Keep display awake** only when you want that additional hold.
+5. Open Settings with the button or **⌘,**. **Escape** closes the popover;
+   **Return** activates its primary action; **⌘Q** quits and releases the hold.
 
-You don't have to close the lid, and opening it doesn't end the session.
+Closing the popover or Settings does not end a session. A timed countdown
+uses a continuous clock, so changing the system clock does not extend it.
+The normal idle sleep settings take effect again when its assertions end;
+TrapAwake never rewrites those settings.
 
-On battery power, Insomnia turns on Low Power Mode below 40% and ends the
-session below 10%. Those are the defaults. You can change both in Settings,
-and an end floor of 0 turns the battery end off. The heat rules turn on Low Power
-Mode when the Mac gets seriously hot and end the session at critical heat.
-They are on by default, and Settings can turn them off. All of these rules
-only work while the app runs.
+Unlimited means **no time limit**, while battery and thermal safeguards
+continue to apply. It lasts only while this process owns its assertions.
+Quit, crash, force quit, logout or reboot ends the hold. A later launch
+never silently resumes a timed or unlimited session. An interrupted marker
+is shown for acknowledgement and archived for diagnosis.
 
-Before your first session, check Settings. Then run a short session you can
-watch, and read `~/Library/Logs/Insomnia/insomnia.log` afterward.
+## Display, lid, and limits
 
-## What happens when the lid closes
+The system hold prevents **idle system sleep**. The optional display hold
+prevents **idle display sleep**. Existing display settings can already be
+set to Never; disabling TrapAwake's display hold does not change that.
+Other applications can also keep the display or system awake.
 
-<p align="center">
-  <img src="docs/assets/lid-actions.svg" alt="Illustrated Settings defaults: Slack, WhatsApp, and Discord on the freeze list, Docker's idle rule off, mute on. During a session, lid close applies configured actions; reopening attempts to resume verified owned freezes and restore saved audio. The session continues. Without an active session, lid changes do nothing." width="880">
-</p>
+TrapAwake does not suppress the screen lock, override deliberate Sleep or
+emergency shutdown, or force a closed-lid laptop to remain awake. Normal
+[Apple clamshell requirements](https://support.apple.com/en-us/102501) still
+apply. Closed-lid overrides are not enabled: the audit found privileged,
+version-sensitive global sleep changes and private display APIs in the
+original implementation. They are kept as historical source, with their
+recovery tests, and are not called by TrapAwake.
 
-During a session, closing the lid does each of these, and opening it tries
-to undo them. The timer keeps counting down while the lid is closed.
+Automatic process/agent sessions, CLI session control, app freezing,
+hotspot handoff and tmux automation are deferred. There is no process
+polling in the shipping awake lifecycle.
 
-- **Display and keyboard light go off.** Insomnia saves their brightness
-  first. With sleep turned off, macOS no longer does this by itself.
-- **Apps on the freeze list are frozen.** Freezing sends an app's processes
-  `SIGSTOP`, which pauses them until `SIGCONT` on lid open. The list starts
-  with Slack, WhatsApp and Discord. "Freeze every other app" is off by
-  default. Even when on, it skips meeting, recording and dictation apps: Zoom,
-  Teams, Webex, FaceTime, Wispr Flow, Granola, Otter, OBS and Loom.
-- **Audio is muted.** Lid open unmutes each output Insomnia muted, even if you
-  switched to another one.
-- **Low Power Mode turns on.** It turns off when the lid opens, unless a
-  battery or heat rule still needs it.
-- **Docker Desktop is frozen when no container runs.** This one is off by
-  default.
+Keep the Mac on a ventilated surface. The app uses macOS thermal states,
+not a raw temperature sensor, and is not a hardware safety guarantee.
+See [Apple's temperature guidance](https://support.apple.com/en-us/102336).
 
-On Mac laptops with Apple silicon or a T2 chip, closing the lid disconnects
-the built-in microphone in hardware. Recording a meeting with the lid closed
-needs AirPods or an external mic.
+## Safety and recovery
 
-[docs/lid-close.md](docs/lid-close.md) has the details: how Docker is checked,
-how brightness is restored, the one-time settings change when you upgrade,
-and how to test lid actions without closing the lid.
+The default warning is 20% battery; the session ends at or below 10% while
+on battery. Both are configurable, with a nonzero critical cutoff. A
+battery that stays unreadable on battery power also ends the hold. Critical
+heat always ends it; stopping at serious heat is on by default. Connecting
+or disconnecting the charger is handled by the native power monitor.
+TrapAwake does not alter Low Power Mode, brightness, audio, other apps'
+preferences, or process scheduling.
 
-## How recovery works
+Official [IOPM assertions](https://developer.apple.com/documentation/iokit/1557134-iopmassertioncreatewithname)
+belong to the process. macOS releases them when that process exits, so no
+privileged persistent power setting needs a launchd backstop. A session
+marker is recorded before acquisition, removed after successful release,
+and retained on a partial cleanup failure. The app reports that failure
+and offers a retry; unreadable recovery evidence is preserved.
 
-<p align="center">
-  <img src="docs/assets/recovery-flow.svg" alt="The app and a launchd backstop coordinate through a shared lock and recovery journal. The app handles normal cleanup. The backstop checks every minute and attempts due recovery, leaving valid active sessions alone. Failed or unreadable recovery evidence stays on disk; saved audio needs the app and unconfirmed stopped processes need inspection." width="880">
-</p>
+Preferences live in `~/Library/Application Support/TrapAwake/preferences.json`;
+logs in `~/Library/Logs/TrapAwake/`. Files are created with mode 0600 and
+app-owned directories with mode 0700. Inspect logs before sharing them.
+[Security details](SECURITY.md) · [architecture](docs/trapawake-architecture.md).
 
-Insomnia writes each change to a **recovery journal**, a file on disk, before
-it makes the change. Ending the session tries to undo what the journal lists.
-If the app crashes or quits, the recovery agent tries the same once the
-session's end time has passed.
+## Build from source
 
-Some things need you:
-
-- The recovery agent can't restore audio. Open Insomnia again for that.
-- The recovery agent doesn't watch the battery or the temperature.
-- Insomnia only unfreezes a process it can prove it froze. A frozen process
-  it can't prove stays frozen until you check it.
-
-If the menu shows a recovery warning, deal with it before you leave the Mac
-alone. [docs/recovery.md](docs/recovery.md) explains each case.
-
-## Optional extras
-
-<details>
-<summary><strong>iPhone hotspot handoff and tmux</strong></summary>
-
-If the Wi-Fi drops during a session, Insomnia can join your iPhone's hotspot.
-Set System Settings > Wi-Fi > Ask to join hotspots to Automatically, then enter
-the hotspot's name and password in Insomnia's Settings. The password stays in
-your login Keychain. Insomnia asks for Location Services access, because
-macOS requires it to read Wi-Fi network names. It never reads your location.
-After you reinstall Insomnia, enter the password again.
-
-After 90 seconds without a network, Insomnia can also type `continue` into a
-tmux pane running a coding agent. It only types into panes you list in
-Settings and mark yourself:
+Install full Xcode with Swift 6.2 or later, then:
 
 ```bash
-tmux set-option -p -t <session:window.pane> @insomnia-nudge on
+git clone https://github.com/TrapstarKS/TrapAwake.git
+cd TrapAwake
+swift build
+swift test
+./scripts/package-trapawake.sh
+./scripts/install-trapawake.sh
+open "$HOME/Applications/TrapAwake.app"
 ```
 
-It doesn't press Enter unless you turn that on. Mark a pane you don't type in.
-[docs/extras.md](docs/extras.md) has the details.
+If Command Line Tools is selected, prefix Swift commands with
+`DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. The build script
+selects that installed Xcode for its own process when needed.
 
-</details>
-
-<details>
-<summary><strong>Chrome, Chromium, Arc and Comet throttling</strong></summary>
-
-These browsers slow down windows that macOS reports as hidden, which includes
-every window while the lid is closed. If a running browser lacks
-`--disable-backgrounding-occluded-windows` or
-`--disable-renderer-backgrounding`, the right-click menu offers "Relaunch
-[browser] unthrottled". It asks first, because relaunching quits the browser,
-and tabs come back only if the browser reopens them on startup. Some web apps
-may still stop with the lid closed.
-[docs/extras.md](docs/extras.md#chrome-chromium-arc-and-comet-throttling) has the
-details.
-
-</details>
-
-<details>
-<summary><strong>Configuration and privacy</strong></summary>
-
-Settings live in `~/Library/Application Support/Insomnia/config.json` and logs
-in `~/Library/Logs/Insomnia/`. Insomnia sets both folders and their files to
-owner-only permissions. It leaves symlinks and access control lists (ACLs,
-extra per-account permission entries) as they are, so another account can
-still have access through one. Logs can contain Wi-Fi names, process details
-and tmux targets, so check them before you share one.
-[docs/extras.md](docs/extras.md#configuration-and-privacy) has the details.
-
-</details>
+`dist/` contains the signed app, ZIP, DMG and checksums. The tests use fake
+assertion drivers and temporary directories; they do not change your power
+settings. Legacy regression tests remain to protect reused components.
+See [contributing](CONTRIBUTING.md) and
+[distribution/signing](docs/trapawake-distribution.md). Original installation
+scripts under `scripts/install.sh` and `scripts/uninstall.sh` are historical
+Insomnia utilities; use only the scripts with **trapawake** in their names.
 
 ## Uninstall
 
-From your checkout:
+From this checkout or the extracted ZIP:
 
 ```bash
-./scripts/uninstall.sh          # removes the app, the agent and the sudoers rule
-./scripts/uninstall.sh --purge  # also removes settings and logs
+./scripts/uninstall-trapawake.sh          # checkout
+./uninstall-trapawake.sh                 # extracted ZIP
 ```
 
-From an unpacked release zip, run `./uninstall.sh` in its folder instead. The
-uninstaller undoes any open session first and stops if it can't.
-[docs/install.md](docs/install.md#uninstall) has the details.
+It unregisters the login item, quits the app, verifies it has exited, and
+removes the owned user-level bundle. `--purge` also removes known preference
+and log files, retaining recovery evidence and the stable ownership lock.
+If installed in `/Applications` from the DMG, first turn off launch at login
+in Settings, quit, and move that copy to Trash. No power preferences need
+resetting. Removal of an older Insomnia installation is a separate operation
+that must retain its recovery evidence until its own cleanup succeeds.
 
-## Development
+## Origin and contributions
 
-```bash
-swift build
-swift test
-```
+Based on Insomnia commit `b6a7499c183b82eb30b5e969489e6a7420250eea` (October 13,
+2026), after its stable 0.1.0. Its power observer, private file utilities,
+login item support and session formatting are reused. The legacy engine and
+tests remain for reference; the shipping app uses a smaller assertion-only
+lifecycle because the original engine assumes global privileged pmset changes.
 
-The tests use fakes and temporary folders, so they never change your power
-settings. See [Contributing](CONTRIBUTING.md), [Security reporting](SECURITY.md),
-[Release validation](docs/release-validation.md) and [Design notes](docs/spec.md).
-
-## Star history
-
-<a href="https://www.star-history.com/?repos=krishhgg%2FInsomnia&amp;type=date&amp;legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=krishhgg/insomnia&amp;type=date&amp;theme=dark&amp;legend=top-left" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=krishhgg/insomnia&amp;type=date&amp;legend=top-left" />
-    <img alt="Star history for krishhgg/Insomnia" src="https://api.star-history.com/svg?repos=krishhgg/insomnia&amp;type=date&amp;legend=top-left" />
-  </picture>
-</a>
+Community PRs #75, #99, #96, #93, #79 and #72 were audited individually.
+None was merged wholesale; decisions and inspected commits are in
+[the audit](docs/trapawake-audit.md). Original contributors are credited in
+[NOTICE](NOTICE.md) and the preserved commit history. Changes are developed
+for this independent fork; there is no automatic upstream synchronization
+and no upstream PR is required or planned.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). Original copyright © 2026 Krish Garg is preserved.
+[Changelog](CHANGELOG.md).

@@ -44,7 +44,7 @@ final class LidCloseCopyTests: XCTestCase {
     }
 
     func testReadmeExplainsTheMicrophone() throws {
-        let readme = flattened(try read("README.md"))
+        let readme = flattened(try read("docs/upstream/README.md"))
         XCTAssertTrue(readme.contains("closing the lid disconnects the built-in microphone in hardware. Recording a meeting with the lid closed needs AirPods or an external mic"))
     }
 

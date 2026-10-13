@@ -6,3 +6,5 @@ xcuserdata/
 DerivedData/
 *.app
 .DS_Store
+
+dist/

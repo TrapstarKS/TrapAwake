@@ -10,7 +10,7 @@ import os
 /// SSIDs, tmux targets, process names and bundle ids. insomnia.log keeps
 /// the full text for the user; its permissions are its own protection.
 enum Log {
-    static let logger = Logger(subsystem: Paths.bundleIdentifier, category: "core")
+    static let logger = Logger(subsystem: "dev.trapstar.TrapAwake", category: "core")
     private static let lock = NSLock()
 
     static func info(_ message: String) {
@@ -23,7 +23,7 @@ enum Log {
         append(level: "error", message)
     }
 
-    static func append(level: String, _ message: String, paths: Paths = .fromEnvironment()) {
+    static func append(level: String, _ message: String, paths: Paths = loggingPaths()) {
         let now = Date().formatted(.iso8601.year().month().day().dateTimeSeparator(.standard).time(includingFractionalSeconds: false).timeZone(separator: .omitted))
         let line = "\(now) [\(level)] insomnia: \(message)\n"
         lock.lock()
@@ -32,10 +32,25 @@ enum Log {
             // Owner-only, and rotated to insomnia.log.1 past OwnerOnly.maxLogBytes.
             // A chmod or rotation that fails is thrown after the line is
             // written, so it reaches the unified log below.
-            try OwnerOnly.appendToLog(line, at: paths.logFile)
+            let file = paths.appBundle.lastPathComponent == "TrapAwake.app"
+                ? paths.logs.appendingPathComponent("trapawake.log") : paths.logFile
+            try OwnerOnly.appendToLog(line, at: file)
         } catch {
             // The description carries a path under the home directory.
             logger.error("insomnia.log: \(error.localizedDescription, privacy: .private)")
         }
+    }
+
+    private static func loggingPaths() -> Paths {
+        let environment = ProcessInfo.processInfo.environment
+        if environment[Paths.environmentKey] != nil { return .fromEnvironment() }
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let root = environment["TRAPAWAKE_HOME"].map { URL(fileURLWithPath: $0) }
+        return Paths(
+            appSupport: root ?? home.appendingPathComponent("Library/Application Support/TrapAwake"),
+            logs: root?.appendingPathComponent("Logs") ?? home.appendingPathComponent("Library/Logs/TrapAwake"),
+            launchAgents: home.appendingPathComponent("Library/LaunchAgents"),
+            appBundle: home.appendingPathComponent("Applications/TrapAwake.app")
+        )
     }
 }

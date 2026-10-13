@@ -1,11 +1,16 @@
 import Foundation
+import ServiceManagement
 
-// Entry point. A one-shot command-line mode is answered here, before AppKit
-// or SwiftUI start, so backstop.sh can borrow the app's kernel-level
-// identity check (see ResumeFrozenCommand), which ends itself when its
-// lifetime is up. Anything else starts the menu bar app.
-if let output = ResumeFrozenCommand.run(Array(CommandLine.arguments.dropFirst()), endAfter: ResumeFrozenCommand.endProcess) {
-    for line in output.lines { print(line) }
-    exit(output.status)
+// Uninstallation must unregister the login item without starting a session.
+if CommandLine.arguments.contains("--unregister-login-item") {
+    do {
+        if SMAppService.mainApp.status != .notRegistered {
+            try SMAppService.mainApp.unregister()
+        }
+        exit(0)
+    } catch {
+        print("Could not remove login item: \(error.localizedDescription)")
+        exit(1)
+    }
 }
-InsomniaApp.main()
+TrapAwakeApp.main()

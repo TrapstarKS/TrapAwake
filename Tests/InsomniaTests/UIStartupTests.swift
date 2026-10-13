@@ -15,8 +15,10 @@ final class UIStartupTests: XCTestCase {
     /// panel. Tests that end there must not leave it up for the next test.
     override func tearDown() {
         MainActor.assumeIsolated {
-            for panel in NSApp.windows.compactMap({ $0 as? KeyCatcherPanel }) where panel.isVisible {
-                panel.orderOut(nil)
+            if let app = NSApp {
+                for panel in app.windows.compactMap({ $0 as? KeyCatcherPanel }) where panel.isVisible {
+                    panel.orderOut(nil)
+                }
             }
         }
         super.tearDown()

@@ -49,6 +49,12 @@ static void insomnia_test_home_install(void) {
         perror("InsomniaTestHome: setenv");
         abort();
     }
+    char awake_root[sizeof g_root + sizeof "/TrapAwake"];
+    snprintf(awake_root, sizeof awake_root, "%s/TrapAwake", g_root);
+    if (setenv("TRAPAWAKE_HOME", awake_root, 1) != 0) {
+        perror("InsomniaTestHome: setenv TRAPAWAKE_HOME");
+        abort();
+    }
     g_have_root = 1;
     g_owner = getpid();
     atexit(remove_root);

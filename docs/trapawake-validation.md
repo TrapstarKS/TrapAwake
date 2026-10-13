@@ -1,0 +1,73 @@
+# TrapAwake 0.2.0 validation
+
+Validated locally on October 13, 2026: Apple Silicon (arm64), macOS 26.3
+(25D125), Xcode 26.6 (17F113), Swift 6.3.3. Deployment minimum: macOS 26.
+These are observed results, not a hardware-safety certification.
+
+## Automated coverage
+
+- Debug compilation and release compilation with warnings treated as errors passed.
+- The full 1,263-case suite was executed twice with isolated XCTest workers.
+  The first run exposed inherited locale, animation scheduling and teardown
+  issues, plus short fake-command timeouts under concurrent compilation.
+- Locale-dependent Security/Keychain expectations now use typed failures or
+  the current native message. Pure UI tests no longer assume NSApp exists.
+  The partial-animation state test starts from a controlled first stage.
+- The second full run passed 1,262 cases and exposed one further one-second
+  success-fixture timeout. Two AppEncoded success scenarios now have a
+  five-second fake-command budget; timeout tests and production limits stay
+  unchanged. The corrected scenarios and affected suites passed on rerun:
+  34 tests, zero failures, including all 29 new Awake tests.
+- Final packaging/isolation/core verification passed 54 tests with zero
+  failures after adding namespace isolation to the test loader.
+- Test data is relocated before discovery for both the historical Insomnia
+  and new TrapAwake namespaces. Core assertion operations use fake drivers;
+  clocks, stores, release failures, power snapshots and concurrent ownership
+  are injected. No automated test changes real power settings.
+- ShellCheck, bash syntax, workflow YAML syntax, plist validation and
+  `git diff --check` passed. The original MIT license is byte-for-byte unchanged.
+
+The new tests cover Unlimited without a fabricated end date; monotonic expiry
+and extensions; invalid/partial preference updates; separate display policy;
+partial assertion acquisition/release; failed cleanup and quit retries;
+unreadable, symlink and interrupted markers; owner-only atomic writes;
+single-instance locks; mandatory battery/critical thermal protection;
+serious-heat configuration; and unavailable battery monitoring.
+
+## Observed installed-app checks
+
+| Check | Result |
+| --- | --- |
+| Install to ~/Applications without root, verify signature and arm64 executable | Passed |
+| Launch/reopen menu controls, native Settings and origin credits | Passed |
+| Unlimited acquisition | One PreventUserIdleSystemSleep assertion, no deadline |
+| Display switch during active session | A separate PreventUserIdleDisplaySleep assertion appeared; system hold remained |
+| End session | Both owned assertions removed; marker cleared |
+| Timed preset and custom 1-minute session | Countdown advanced; 1-minute expiry released assertion and cleared marker |
+| Close options/settings | Session remained active |
+| Return / Escape / Command-Q | Start, close UI, graceful quit observed |
+| Force quit during Unlimited | Owned assertion disappeared immediately; interrupted marker remained |
+| Relaunch after force quit | Inactive, explicit acknowledgement shown; no automatic assertion acquisition |
+| Recovery acknowledgement | Marker archived; controls became available |
+| Graceful quit from active session | Process exited, assertion and active marker removed |
+| Global power settings | pmset -g custom was byte-identical before and after every observed session check |
+| Actual screenshots | Menu, timed session and Settings captured from the installed app |
+| ZIP/DMG and SHA256SUMS | Generated locally and verified |
+
+## Limits and release origin
+
+Critical battery and thermal events were tested with injected snapshots;
+we did not drain the battery, create thermal stress, physically reboot,
+change global display settings, or attempt unsupported closed-lid operation.
+Actual login-item registration was not toggled; its existing mocked service
+suite remains covered. Other applications and existing settings can prevent
+idle sleep independently of TrapAwake.
+
+macOS 27 is configured as a CI target. No local macOS 27 or Intel hardware
+validation is claimed. The initial release is built locally, ad-hoc signed,
+and not Developer ID signed or notarized. It has checksums, with no hosted
+build-provenance attestation claimed. Gatekeeper was not disabled, and
+first-launch behavior of a quarantined browser download is not claimed tested.
+
+Historical Insomnia results in docs/release-validation.md belong to its
+original maintainer and releases; they are not evidence for TrapAwake.

@@ -50,6 +50,8 @@ final class PowerMonitor {
     private var running = false
     private var recheck: Task<Void, Never>?
 
+    var batteryNotificationsAvailable: Bool { source != nil }
+
     /// `reader` and `recheckDelay` are injection points for tests; the
     /// defaults read IOKit and wait 30 s between re-reads of an unreadable
     /// battery.
