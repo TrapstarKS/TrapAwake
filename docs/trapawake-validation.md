@@ -130,6 +130,10 @@ bundle signature and the DMG checksum passed; the extracted app is
 byte-identical to the installed 0.2.1 bundle. These remain locally built,
 ad-hoc signed assets, without a hosted provenance or notarization claim.
 
+The separate [tag-release workflow 38425365354](https://github.com/TrapstarKS/TrapAwake/actions/runs/38425365354)
+also completed successfully. Its publisher retained the existing assets for
+the same source commit rather than replacing the locally built release.
+
 These event tests call the native controls with synthetic NSEvents; they
 do not establish physical hit-testing, live keyboard focus or VoiceOver
 behavior. The UI automation surface cannot directly select this windowless
