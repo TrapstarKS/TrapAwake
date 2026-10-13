@@ -6614,7 +6614,19 @@ private final class ScriptFixture {
                 # "drops-fd9-logs-signals": like "logs-term", after closing
                 # its fd 9 the way sudo does, and every SIGHUP it gets is
                 # logged as "sudo SIGHUP".
-                drops-fd9-logs-signals) exec 9<&-; trap 'echo "sudo SIGHUP" >> "\(calls)"' HUP; hang_on_term ignore ;;
+                drops-fd9-logs-signals)
+                  exec 9<&-
+                  /usr/bin/mkfifo -m 600 "\(r)/signal-wait" || exit 1
+                  exec 8<>"\(r)/signal-wait"
+                  trap 'echo "sudo SIGTERM" >> "\(calls)"' TERM
+                  trap 'echo "sudo SIGHUP" >> "\(calls)"' HUP
+                  deadline=$(( SECONDS + 60 ))
+                  echo $$ > "\(r)/sudo.hung.pid"
+                  # Builtin waiting keeps pending traps out of forked children.
+                  while [[ ! -e "\(r)/release" && -d "\(r)" && $SECONDS -lt $deadline ]]; do read -r -t 1 <&8 || true; done
+                  if [[ -e "\(r)/release" ]]; then echo released > "\(r)/command.ended"
+                  elif [[ -d "\(r)" ]]; then echo watchdog > "\(r)/command.ended"; fi
+                  exit 0 ;;
                 # "signals-self": for SIGTERM and then SIGHUP, a shell that
                 # inherits this command's signal actions sends itself the
                 # signal and, if it is still there afterwards, logs "sudo

@@ -71,3 +71,18 @@ first-launch behavior of a quarantined browser download is not claimed tested.
 
 Historical Insomnia results in docs/release-validation.md belong to its
 original maintainer and releases; they are not evidence for TrapAwake.
+
+## Hosted verification after publication
+
+[CI run 38376757794](https://github.com/TrapstarKS/TrapAwake/actions/runs/38376757794)
+for source `8d986df62e4117f06a310c8da836a694aea83428` completed successfully on
+both macOS 26 and macOS 27. Each runner executed 1,263 tests with 27 conditional
+skips and zero failures; release compilation and packaging also succeeded.
+These are hosted automated results, not local hardware validation.
+
+The separate tag-release run exposed a Bash 3.2 race in a historical fake
+sudo: a TERM trap could be copied into a newly forked sleep child. Its
+signal-logging fixture now waits with a builtin read on a private FIFO, so
+it forks nothing after publishing readiness. Production supervisor code,
+timeouts, lock ownership and published 0.2.0 application assets are unchanged.
+The supervisor-lifetime and slow-poll timeout tests passed after this correction.
